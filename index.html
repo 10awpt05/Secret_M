@@ -213,20 +213,61 @@ video{
 
 /* MOBILE */
 
-@media(max-width:750px){
+@media (max-width:750px){
 
-#menu{
-    width:90%;
+  /* Menu grid & image cards */
+  #menu{
+    width:95%;
     grid-template-columns:repeat(2,1fr);
-}
+    gap:15px;
+    margin:20px auto;
+  }
 
-.choice{
+  .choice{
     width:100%;
-    height:140px;
-}
+    height:180px; /* bigger */
+  }
+
+  /* Puzzle container */
+  #puzzle{
+    width:260px; /* slightly bigger than before */
+    height:260px;
+    margin:30px auto;
+  }
+
+  .tile{
+    width:86.666px; /* scale with puzzle */
+    height:86.666px;
+  }
+
+  /* Buttons bigger and easier to tap */
+  button{
+    padding:14px 26px;
+    font-size:18px;
+  }
+
+  /* Video */
+  #rewardVideo{
+    width:95%;
+    max-width:100%;
+    height:auto;
+    border-radius:10px;
+  }
+
+  /* Reaction cam smaller for phone but visible */
+  #reactionCam{
+    width:140px;
+    bottom:15px;
+    right:15px;
+  }
+
+  /* Popup card bigger for small screens */
+  #popup div{
+    width:90%;
+    padding:30px;
+  }
 
 }
-
 #reactionCam{
 position:fixed;
 bottom:20px;
