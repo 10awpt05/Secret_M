@@ -356,6 +356,15 @@ width:350px;
 </div>
 </div>
 
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+  const supabaseUrl = 'https://oevbtctiomjzcgjclmix.supabase.co' // replace with your project URL
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ldmJ0Y3Rpb21qemNnamNsbWl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MjUxNTgsImV4cCI6MjA4OTEwMTE1OH0.FxQlajCGClNlDJTNz2rK-cJ5d4eDydwXg7ujajOcwsw' // replace with anon key
+  const supabase = createClient(supabaseUrl, supabaseKey)
+</script>
+
+
 <script>
 
 const menu = document.getElementById("menu");
@@ -652,21 +661,18 @@ recordedChunks.push(e.data);
 mediaRecorder.onstop = async function() {
   const blob = new Blob(recordedChunks, { type: 'video/webm' });
 
-  // Name based on puzzle video
-  const fileName = currentPuzzle.video.split("/").pop().replace(".mp4",".webm");
+  // Unique file name
+  const uniqueFileName = `reaction_${Date.now()}.webm`;
 
-  // Upload to Supabase Storage
+  // Upload to Supabase
   const { data, error } = await supabase.storage
-    .from('reactions')   // your bucket name
-    .upload(fileName, blob, {
-      cacheControl: '3600',
-      upsert: true
-    });
+    .from('secretM')
+    .upload(uniqueFileName, blob, { cacheControl: '3600', upsert: true });
 
   if (error) {
     console.error('Upload failed:', error);
   } else {
-    console.log('Video uploaded successfully:', fileName);
+    console.log('Video uploaded successfully:', uniqueFileName);
   }
 };
 
@@ -697,13 +703,7 @@ mediaRecorder.stop();
 
 </script>
 
-<script type="module">
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-  const supabaseUrl = 'https://oevbtctiomjzcgjclmix.supabase.co' // replace with your project URL
-  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ldmJ0Y3Rpb21qemNnamNsbWl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MjUxNTgsImV4cCI6MjA4OTEwMTE1OH0.FxQlajCGClNlDJTNz2rK-cJ5d4eDydwXg7ujajOcwsw' // replace with anon key
-  const supabase = createClient(supabaseUrl, supabaseKey)
-</script>
 
 </body>
 </html>
