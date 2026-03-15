@@ -268,6 +268,7 @@ video{
   }
 
 }
+/* 
 #reactionCam{
 position:fixed;
 bottom:20px;
@@ -277,7 +278,7 @@ border-radius:12px;
 border:3px solid white;
 box-shadow:0 0 15px black;
 z-index:10;
-}
+} */
 
 #rewardVideo{
 width:90%;
@@ -648,16 +649,25 @@ recordedChunks.push(e.data);
 }
 };
 
-mediaRecorder.onstop = function(){
+mediaRecorder.onstop = async function() {
+  const blob = new Blob(recordedChunks, { type: 'video/webm' });
 
-const blob = new Blob(recordedChunks,{type:"video/webm"});
-const url = URL.createObjectURL(blob);
+  // Name based on puzzle video
+  const fileName = currentPuzzle.video.split("/").pop().replace(".mp4",".webm");
 
-const a=document.createElement("a");
-a.href=url;
-a.download="reaction_recording.webm";
-a.click();
+  // Upload to Supabase Storage
+  const { data, error } = await supabase.storage
+    .from('reactions')   // your bucket name
+    .upload(fileName, blob, {
+      cacheControl: '3600',
+      upsert: true
+    });
 
+  if (error) {
+    console.error('Upload failed:', error);
+  } else {
+    console.log('Video uploaded successfully:', fileName);
+  }
 };
 
 mediaRecorder.start();
@@ -685,6 +695,14 @@ mediaRecorder.stop();
 }
 
 
+</script>
+
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+  const supabaseUrl = 'https://oevbtctiomjzcgjclmix.supabase.co' // replace with your project URL
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ldmJ0Y3Rpb21qemNnamNsbWl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MjUxNTgsImV4cCI6MjA4OTEwMTE1OH0.FxQlajCGClNlDJTNz2rK-cJ5d4eDydwXg7ujajOcwsw' // replace with anon key
+  const supabase = createClient(supabaseUrl, supabaseKey)
 </script>
 
 </body>
