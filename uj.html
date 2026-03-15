@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Animated Image Puzzle</title>
+
+<style>
+
+body{
+    font-family:Arial;
+    text-align:center;
+    background:#f3f3f3;
+}
+
+h1{
+    margin-top:20px;
+}
+
+#puzzle{
+    width:300px;
+    height:300px;
+    margin:30px auto;
+    position:relative;
+    border:3px solid #333;
+}
+
+.tile{
+    width:100px;
+    height:100px;
+    position:absolute;
+    background-image:url("/images/img1.jpg");
+    background-size:300px 300px;
+    cursor:pointer;
+
+    transition: all 0.25s ease;
+}
+
+.empty{
+    display:none;
+}
+
+button{
+    padding:10px 20px;
+    font-size:16px;
+    border:none;
+    background:#27ae60;
+    color:white;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#219150;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>🧩 Image Puzzle</h1>
+<p>Slide the pieces to rebuild the image</p>
+
+<div id="puzzle"></div>
+
+<button onclick="shuffle()">Shuffle</button>
+
+<script>
+
+const puzzle = document.getElementById("puzzle");
+
+let tiles = [];
+
+let positions = [
+0,1,2,
+3,4,5,
+6,7,null
+];
+
+function createTiles(){
+
+    for(let i=0;i<8;i++){
+
+        const tile = document.createElement("div");
+        tile.className="tile";
+        tile.dataset.index=i;
+
+        let x = (i % 3) * 100;
+        let y = Math.floor(i / 3) * 100;
+
+        tile.style.backgroundPosition = `-${x}px -${y}px`;
+
+        tile.addEventListener("click",()=>move(i));
+
+        puzzle.appendChild(tile);
+
+        tiles.push(tile);
+    }
+
+}
+
+function render(){
+
+    tiles.forEach((tile,i)=>{
+
+        const pos = positions.indexOf(i);
+
+        let x = (pos % 3) * 100;
+        let y = Math.floor(pos / 3) * 100;
+
+        tile.style.left = x+"px";
+        tile.style.top = y+"px";
+
+    });
+
+}
+
+function move(tileIndex){
+
+    const tilePos = positions.indexOf(tileIndex);
+    const emptyPos = positions.indexOf(null);
+
+    const validMoves = [
+        tilePos-1,
+        tilePos+1,
+        tilePos-3,
+        tilePos+3
+    ];
+
+    if(validMoves.includes(emptyPos)){
+
+        positions[emptyPos] = tileIndex;
+        positions[tilePos] = null;
+
+        render();
+    }
+
+}
+
+function shuffle(){
+
+    for(let i=0;i<200;i++){
+
+        let movable = [];
+
+        const emptyPos = positions.indexOf(null);
+
+        const checks = [
+            emptyPos-1,
+            emptyPos+1,
+            emptyPos-3,
+            emptyPos+3
+        ];
+
+        checks.forEach(pos=>{
+            if(pos>=0 && pos<9 && positions[pos] !== undefined){
+                movable.push(positions[pos]);
+            }
+        });
+
+        let randomTile = movable[Math.floor(Math.random()*movable.length)];
+
+        move(randomTile);
+
+    }
+
+}
+
+createTiles();
+render();
+shuffle();
+
+</script>
+
+</body>
+</html>

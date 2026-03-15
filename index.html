@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Image Puzzle Game</title>
+
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    font-family: "Segoe UI", Arial, sans-serif;
+    text-align:center;
+    margin:0;
+    min-height:100vh;
+
+    background:linear-gradient(135deg,#1f2937,#111827,#020617);
+    color:white;
+}
+
+/* TITLE */
+
+h1{
+    margin-top:30px;
+    font-size:42px;
+    letter-spacing:2px;
+}
+
+/* IMAGE SELECTION */
+
+#menu{
+    width:720px;
+    margin:40px auto;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
+
+/* IMAGE CARDS */
+
+.choice{
+    width:160px;
+    height:160px;
+
+    background-size:cover;
+    background-position:center;
+
+    border-radius:14px;
+
+    cursor:pointer;
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,0.5);
+
+    transition:0.35s;
+}
+
+.choice:hover{
+
+    transform:scale(1.08) rotate(1deg);
+
+    box-shadow:
+    0 15px 35px rgba(0,0,0,0.7),
+    0 0 15px #22c55e;
+
+}
+
+/* GAME AREA */
+
+#game{
+    display:none;
+}
+
+/* PUZZLE CONTAINER */
+
+#puzzle{
+    width:320px;
+    height:320px;
+
+    margin:40px auto;
+
+    position:relative;
+
+    border-radius:16px;
+
+    border:4px solid #22c55e;
+
+    box-shadow:
+    0 10px 40px rgba(0,0,0,0.8);
+
+    overflow:hidden;
+}
+
+/* PUZZLE TILES */
+
+.tile{
+    width:106.666px;
+    height:106.666px;
+    position:absolute;
+    background-size:320px 320px;
+    cursor:pointer;
+    border:1px solid rgba(255,255,255,0.2);
+    transition:left 0.25s ease, top 0.25s ease, transform 0.15s;
+}
+
+.tile:hover{
+    transform:scale(1.05);
+}
+
+/* BUTTONS */
+
+button{
+
+    padding:12px 22px;
+
+    font-size:16px;
+
+    border:none;
+
+    margin:10px;
+
+    border-radius:8px;
+
+    color:white;
+
+    cursor:pointer;
+
+    background:linear-gradient(45deg,#22c55e,#16a34a);
+
+    box-shadow:
+    0 5px 15px rgba(0,0,0,0.4);
+
+    transition:0.25s;
+
+}
+
+button:hover{
+
+    transform:translateY(-2px);
+
+    background:linear-gradient(45deg,#4ade80,#22c55e);
+
+}
+
+/* VIDEO SCREEN */
+
+#videoScreen{
+    display:none;
+    margin-top:40px;
+}
+
+video{
+
+    border-radius:12px;
+
+    box-shadow:
+    0 10px 40px rgba(0,0,0,0.8);
+
+}
+
+/* POPUP OVERLAY */
+
+#popup{
+
+    display:none;
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    backdrop-filter:blur(6px);
+
+    background:rgba(0,0,0,0.5);
+
+    justify-content:center;
+    align-items:center;
+}
+
+/* POPUP CARD */
+
+#popup div{
+
+    background:rgba(255,255,255,0.1);
+
+    padding:35px;
+
+    border-radius:14px;
+
+    width:360px;
+
+    backdrop-filter:blur(15px);
+
+    box-shadow:
+    0 10px 40px rgba(0,0,0,0.8);
+
+}
+
+#popup h2{
+    margin-top:0;
+}
+
+
+#popup p{
+    color:#f87171;
+}
+
+/* MOBILE */
+
+@media(max-width:750px){
+
+#menu{
+    width:90%;
+    grid-template-columns:repeat(2,1fr);
+}
+
+.choice{
+    width:100%;
+    height:140px;
+}
+
+}
+
+#reactionCam{
+position:fixed;
+bottom:20px;
+right:20px;
+width:180px;
+border-radius:12px;
+border:3px solid white;
+box-shadow:0 0 15px black;
+z-index:10;
+}
+
+#rewardVideo{
+width:90%;
+max-width:900px;
+height:auto;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>🧩 HELLO MAAM JAY</h1>
+
+<h3>Select an Image</h3>
+
+<div id="menu"></div>
+
+<div id="game">
+
+<div id="puzzle"></div>
+
+
+
+<button onclick="shuffle()">Shuffle</button>
+<button onclick="backMenu()">Change Image</button>
+
+</div>
+<h3>PLEASE SOLVE THE IMAGE TO UNLOCK SECRET MODE</h3>
+<div id="videoScreen" style="display:none">
+
+<h2>🎉 Well Done!</h2>
+
+<video id="rewardVideo" controls>
+    <source id="videoSource" src="" type="video/mp4">
+</video>
+
+<br>
+
+<!-- Reaction Camera -->
+<video id="reactionCam" autoplay muted playsinline width="180"></video>
+
+<br><br>
+<button id="backBtn" onclick="backMenuFromVideo()" disabled>
+Back to Menu (20)
+</button>
+
+</div>
+
+<div id="popup" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+justify-content:center;
+align-items:center;
+">
+
+<div style="
+background:white;
+padding:30px;
+border-radius:10px;
+text-align:center;
+width:350px;
+">
+
+<h2>🎉 Well Done!</h2>
+<p style="color: red;"><b>Before proceeding please turn on your audio.</b></p>
+
+<button onclick="proceedToVideo()">Proceed</button>
+
+</div>
+</div>
+
+<script>
+
+const menu = document.getElementById("menu");
+const puzzle = document.getElementById("puzzle");
+const game = document.getElementById("game");
+
+let currentImage = "";
+let tiles = [];
+
+let positions = [
+0,1,2,
+3,4,5,
+6,7,null
+];
+
+/* CREATE IMAGE SELECTION */
+
+const puzzles = [
+{img:"images/img1.jpg", video:"videos/vid1.mp4"},
+{img:"images/img2.png", video:"videos/vid2.mp4"},
+{img:"images/img3.png", video:"videos/vid3.mp4"},
+{img:"images/img4.jpg", video:"videos/vid4.mp4"},
+{img:"images/img5.png", video:"videos/vid5.mp4"},
+{img:"images/img6.jpg", video:"videos/vid6.mp4"},
+{img:"images/img7.jpg", video:"videos/vid7.mp4"},
+{img:"images/img8.jpg", video:"videos/vid8.mp4"}
+];
+
+puzzles.forEach((item)=>{
+
+    const img = document.createElement("div");
+    img.className="choice";
+    img.style.backgroundImage=`url(${item.img})`;
+
+    img.onclick=()=>startGame(item);
+
+    menu.appendChild(img);
+
+});
+
+/* START GAME */
+
+let currentPuzzle = null;
+
+function startGame(puzzleData){
+
+    currentPuzzle = puzzleData;
+    currentImage = puzzleData.img;
+
+    menu.style.display="none";
+    game.style.display="block";
+
+    puzzle.innerHTML="";
+    tiles=[];
+
+    positions=[0,1,2,3,4,5,6,7,null];
+
+    createTiles();
+    render();
+    shuffle();
+}
+
+function startBackCountdown(){
+
+let seconds = 20;
+const btn = document.getElementById("backBtn");
+
+btn.disabled = true;
+btn.textContent = `Back to Menu (${seconds})`;
+
+const timer = setInterval(()=>{
+
+seconds--;
+
+btn.textContent = `Back to Menu (${seconds})`;
+
+if(seconds <= 0){
+
+clearInterval(timer);
+
+btn.disabled = false;
+btn.textContent = "Back to Menu";
+
+}
+
+},1000);
+
+}
+
+/* CREATE TILES */
+
+function createTiles(){
+
+    for(let i=0;i<8;i++){
+
+        const tile=document.createElement("div");
+
+        tile.className="tile";
+        tile.dataset.index=i;
+
+        tile.style.backgroundImage=`url(${currentImage})`;
+
+        let size = 320/3;
+
+        let x = (i % 3) * size;
+        let y = Math.floor(i / 3) * size;
+
+        tile.style.backgroundPosition = `-${x}px -${y}px`;
+
+        tile.onclick=()=>move(i);
+
+        puzzle.appendChild(tile);
+        tiles.push(tile);
+    }
+
+}
+
+/* RENDER */
+
+function render(){
+
+    tiles.forEach((tile,i)=>{
+
+        const pos=positions.indexOf(i);
+
+        let size = 320/3;
+
+        let x = (pos % 3) * size;
+        let y = Math.floor(pos / 3) * size;   
+
+        tile.style.left=x+"px";
+        tile.style.top=y+"px";
+
+    });
+
+}
+
+/* MOVE TILE */
+
+function move(tileIndex){
+
+    const tilePos=positions.indexOf(tileIndex);
+    const emptyPos=positions.indexOf(null);
+
+    const valid=[
+        tilePos-1,
+        tilePos+1,
+        tilePos-3,
+        tilePos+3
+    ];
+
+    if(valid.includes(emptyPos)){
+
+        positions[emptyPos]=tileIndex;
+        positions[tilePos]=null;
+
+        render();
+        checkWin(); 
+    }
+
+}
+
+// function proceedToVideo(){
+
+// const video=document.getElementById("rewardVideo");
+// const source=document.getElementById("videoSource");
+
+// source.src=currentPuzzle.video;
+
+// video.load();
+
+// document.getElementById("popup").style.display="none";
+// game.style.display="none";
+// document.getElementById("videoScreen").style.display="block";
+
+// video.muted=false;
+// video.volume=1;
+
+// video.play();
+
+// startBackCountdown(); // start 20 sec lock
+
+// }
+
+function backMenuFromVideo(){
+
+document.getElementById("videoScreen").style.display="none";
+menu.style.display="grid";
+
+if(cameraStream){
+
+cameraStream.getTracks().forEach(track=>track.stop());
+
+}
+
+}   
+
+/* SHUFFLE */
+
+function shuffle(){
+
+    for(let i=0;i<200;i++){
+
+        const empty=positions.indexOf(null);
+
+        const neighbors=[
+            empty-1,
+            empty+1,
+            empty-3,
+            empty+3
+        ];
+
+        const movable=[];
+
+        neighbors.forEach(n=>{
+            if(n>=0 && n<9 && positions[n]!==undefined){
+                movable.push(positions[n]);
+            }
+        });
+
+        const rand=movable[Math.floor(Math.random()*movable.length)];
+
+        move(rand);
+    }
+
+}
+
+/* BACK TO MENU */
+
+function backMenu(){
+
+    game.style.display="none";
+    menu.style.display="grid";
+
+}
+
+function checkWin(){
+
+const solved=[0,1,2,3,4,5,6,7,null];
+
+if(JSON.stringify(positions)===JSON.stringify(solved)){
+
+    document.getElementById("popup").style.display="flex";
+
+}
+
+}
+
+
+let cameraStream = null;
+let mediaRecorder = null;
+let recordedChunks = [];
+
+async function proceedToVideo(){
+
+const video=document.getElementById("rewardVideo");
+const source=document.getElementById("videoSource");
+
+source.src=currentPuzzle.video;
+
+video.load();
+
+document.getElementById("popup").style.display="none";
+game.style.display="none";
+document.getElementById("videoScreen").style.display="block";
+
+video.muted=false;
+video.volume=1;
+
+/* START CAMERA + RECORDING */
+
+try{
+
+cameraStream = await navigator.mediaDevices.getUserMedia({
+video:true,
+audio:true
+});
+
+const cam=document.getElementById("reactionCam");
+cam.srcObject=cameraStream;
+
+/* RECORD */
+
+mediaRecorder = new MediaRecorder(cameraStream);
+
+recordedChunks=[];
+
+mediaRecorder.ondataavailable = function(e){
+if(e.data.size>0){
+recordedChunks.push(e.data);
+}
+};
+
+mediaRecorder.onstop = function(){
+
+const blob = new Blob(recordedChunks,{type:"video/webm"});
+const url = URL.createObjectURL(blob);
+
+const a=document.createElement("a");
+a.href=url;
+a.download="reaction_recording.webm";
+a.click();
+
+};
+
+mediaRecorder.start();
+
+}catch(err){
+
+console.log("Camera permission denied");
+
+}
+
+video.play();
+
+startBackCountdown();
+
+/* STOP RECORDING WHEN VIDEO ENDS */
+
+video.onended=function(){
+
+if(mediaRecorder){
+mediaRecorder.stop();
+}
+
+};
+
+}
+
+
+</script>
+
+</body>
+</html>

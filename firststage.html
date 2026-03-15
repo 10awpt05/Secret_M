@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sliding Puzzle Game</title>
+<style>
+    body{
+        font-family: Arial, sans-serif;
+        text-align:center;
+        background:#f0f0f0;
+    }
+
+    h1{
+        margin-top:20px;
+    }
+
+    #puzzle{
+        width:300px;
+        height:300px;
+        margin:20px auto;
+        display:grid;
+        grid-template-columns:repeat(3,1fr);
+        grid-template-rows:repeat(3,1fr);
+        gap:5px;
+    }
+
+    .tile{
+        background:#3498db;
+        color:white;
+        font-size:30px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        cursor:pointer;
+        border-radius:8px;
+        transition:0.2s;
+    }
+
+    .tile:hover{
+        background:#2980b9;
+    }
+
+    .empty{
+        background:transparent;
+        cursor:default;
+    }
+
+    button{
+        padding:10px 20px;
+        font-size:16px;
+        border:none;
+        background:#2ecc71;
+        color:white;
+        border-radius:6px;
+        cursor:pointer;
+    }
+
+    button:hover{
+        background:#27ae60;
+    }
+</style>
+</head>
+<body>
+
+<h1>🧩 Sliding Puzzle Game</h1>
+<p>Arrange the numbers from 1 to 8!</p>
+
+<div id="puzzle"></div>
+
+<button onclick="shuffle()">Shuffle</button>
+
+<script>
+
+let tiles = [1,2,3,4,5,6,7,8,null];
+
+const puzzle = document.getElementById("puzzle");
+
+function render(){
+    puzzle.innerHTML="";
+
+    tiles.forEach((num,index)=>{
+        const tile = document.createElement("div");
+        tile.classList.add("tile");
+
+        if(num === null){
+            tile.classList.add("empty");
+        }else{
+            tile.textContent = num;
+            tile.onclick = () => move(index);
+        }
+
+        puzzle.appendChild(tile);
+    });
+}
+
+function move(index){
+
+    const emptyIndex = tiles.indexOf(null);
+
+    const validMoves = [
+        index-1,
+        index+1,
+        index-3,
+        index+3
+    ];
+
+    if(validMoves.includes(emptyIndex)){
+        [tiles[index],tiles[emptyIndex]] = [tiles[emptyIndex],tiles[index]];
+        render();
+        checkWin();
+    }
+}
+
+function shuffle(){
+    for(let i=0;i<100;i++){
+        const rand = Math.floor(Math.random()*9);
+        move(rand);
+    }
+}
+
+function checkWin(){
+    const win = [1,2,3,4,5,6,7,8,null];
+
+    if(JSON.stringify(tiles) === JSON.stringify(win)){
+        setTimeout(()=>{
+            alert("🎉 You solved the puzzle!");
+        },100);
+    }
+}
+
+render();
+
+</script>
+
+</body>
+</html>
