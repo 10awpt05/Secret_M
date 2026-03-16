@@ -4,331 +4,93 @@
 <meta charset="UTF-8">
 <title>Image Puzzle Game</title>
 
-
 <style>
 
 *{
-    box-sizing:border-box;
+box-sizing:border-box;
 }
 
 body{
-    font-family: "Segoe UI", Arial, sans-serif;
-    text-align:center;
-    margin:0;
-    min-height:100vh;
-
-    background:linear-gradient(135deg,#1f2937,#111827,#020617);
-    color:white;
+font-family: "Segoe UI", Arial, sans-serif;
+text-align:center;
+margin:0;
+min-height:100vh;
+background:linear-gradient(135deg,#1f2937,#111827,#020617);
+color:white;
 }
-
-/* TITLE */
 
 h1{
-    margin-top:30px;
-    font-size:42px;
-    letter-spacing:2px;
+margin-top:15px;
+font-size:42px;
+letter-spacing:2px;
 }
-
-/* IMAGE SELECTION */
 
 #menu{
-    width:720px;
-    margin:40px auto;
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:20px;
+width:720px;
+margin:40px auto;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
 }
 
-/* IMAGE CARDS */
-
 .choice{
-    width:160px;
-    height:160px;
-
-    background-size:cover;
-    background-position:center;
-
-    border-radius:14px;
-
-    cursor:pointer;
-
-    box-shadow:
-    0 10px 25px rgba(0,0,0,0.5);
-
-    transition:0.35s;
+width:160px;
+height:160px;
+background-size:cover;
+background-position:center;
+border-radius:14px;
+cursor:pointer;
+box-shadow:0 10px 25px rgba(0,0,0,0.5);
+transition:0.35s;
 }
 
 .choice:hover{
-
-    transform:scale(1.08) rotate(1deg);
-
-    box-shadow:
-    0 15px 35px rgba(0,0,0,0.7),
-    0 0 15px #22c55e;
-
+transform:scale(1.08) rotate(1deg);
+box-shadow:0 15px 35px rgba(0,0,0,0.7),0 0 15px #22c55e;
 }
-
-/* GAME AREA */
 
 #game{
-    display:none;
+display:none;
 }
-
-/* PUZZLE CONTAINER */
 
 #puzzle{
-    width:320px;
-    height:320px;
-
-    margin:40px auto;
-
-    position:relative;
-
-    border-radius:16px;
-
-    border:4px solid #22c55e;
-
-    box-shadow:
-    0 10px 40px rgba(0,0,0,0.8);
-
-    overflow:hidden;
+width:320px;
+height:320px;
+margin:40px auto;
+position:relative;
+border-radius:16px;
+border:4px solid #22c55e;
+box-shadow:0 10px 40px rgba(0,0,0,0.8);
+overflow:hidden;
 }
 
-/* PUZZLE TILES */
-
 .tile{
-    width:106.666px;
-    height:106.666px;
-    position:absolute;
-    background-size:320px 320px;
-    cursor:pointer;
-    border:1px solid rgba(255,255,255,0.2);
-    transition:left 0.25s ease, top 0.25s ease, transform 0.15s;
+width:106.666px;
+height:106.666px;
+position:absolute;
+background-size:320px 320px;
+cursor:pointer;
+border:1px solid rgba(255,255,255,0.2);
+transition:left 0.25s ease, top 0.25s ease, transform 0.15s;
 }
 
 .tile:hover{
-    transform:scale(1.05);
+transform:scale(1.05);
 }
-
-/* BUTTONS */
 
 button{
-
-    padding:12px 22px;
-
-    font-size:16px;
-
-    border:none;
-
-    margin:10px;
-
-    border-radius:8px;
-
-    color:white;
-
-    cursor:pointer;
-
-    background:linear-gradient(45deg,#22c55e,#16a34a);
-
-    box-shadow:
-    0 5px 15px rgba(0,0,0,0.4);
-
-    transition:0.25s;
-
+padding:12px 22px;
+font-size:16px;
+border:none;
+margin:10px;
+border-radius:8px;
+color:white;
+cursor:pointer;
+background:linear-gradient(45deg,#22c55e,#16a34a);
+box-shadow:0 5px 15px rgba(0,0,0,0.4);
 }
-
-button:hover{
-
-    transform:translateY(-2px);
-
-    background:linear-gradient(45deg,#4ade80,#22c55e);
-
-}
-
-/* VIDEO SCREEN */
-
-#videoScreen{
-    display:none;
-    margin-top:40px;
-}
-
-video{
-
-    border-radius:12px;
-
-    box-shadow:
-    0 10px 40px rgba(0,0,0,0.8);
-
-}
-
-/* POPUP OVERLAY */
 
 #popup{
-
-    display:none;
-
-    position:fixed;
-
-    top:0;
-    left:0;
-
-    width:100%;
-    height:100%;
-
-    backdrop-filter:blur(6px);
-
-    background:rgba(0,0,0,0.5);
-
-    justify-content:center;
-    align-items:center;
-}
-
-/* POPUP CARD */
-
-#popup div{
-
-    background:rgba(255,255,255,0.1);
-
-    padding:35px;
-
-    border-radius:14px;
-
-    width:360px;
-
-    backdrop-filter:blur(15px);
-
-    box-shadow:
-    0 10px 40px rgba(0,0,0,0.8);
-
-}
-
-#popup h2{
-    margin-top:0;
-}
-
-
-#popup p{
-    color:#f87171;
-}
-
-/* MOBILE */
-
-@media (max-width:750px){
-
-  /* Menu grid & image cards */
-  #menu{
-    width:95%;
-    grid-template-columns:repeat(2,1fr);
-    gap:15px;
-    margin:20px auto;
-  }
-
-  .choice{
-    width:100%;
-    height:180px; /* bigger */
-  }
-
-  /* Puzzle container */
-  #puzzle{
-    width:260px; /* slightly bigger than before */
-    height:260px;
-    margin:30px auto;
-  }
-
-  .tile{
-    width:86.666px; /* scale with puzzle */
-    height:86.666px;
-  }
-
-  /* Buttons bigger and easier to tap */
-  button{
-    padding:14px 26px;
-    font-size:18px;
-  }
-
-  /* Video */
-  #rewardVideo{
-    width:95%;
-    max-width:100%;
-    height:auto;
-    border-radius:10px;
-  }
-
-  /* Reaction cam smaller for phone but visible */
-  #reactionCam{
-    width:140px;
-    bottom:15px;
-    right:15px;
-  }
-
-  /* Popup card bigger for small screens */
-  #popup div{
-    width:90%;
-    padding:30px;
-  }
-
-}
-/* 
-#reactionCam{
-position:fixed;
-bottom:20px;
-right:20px;
-width:180px;
-border-radius:12px;
-border:3px solid white;
-box-shadow:0 0 15px black;
-z-index:10;
-} */
-
-#rewardVideo{
-width:90%;
-max-width:900px;
-height:auto;
-}
-</style>
-
-</head>
-
-<body>
-
-<h1>🧩 HELLO MAAM JAY</h1>
-
-<h3>Select an Image</h3>
-
-<div id="menu"></div>
-
-<div id="game">
-
-<div id="puzzle"></div>
-
-
-
-<button onclick="shuffle()">Shuffle</button>
-<button onclick="backMenu()">Change Image</button>
-
-</div>
-<h3>PLEASE SOLVE THE IMAGE TO UNLOCK SECRET MODE</h3>
-<div id="videoScreen" style="display:none">
-
-<h2>🎉 Well Done!</h2>
-
-<video id="rewardVideo" controls>
-    <source id="videoSource" src="" type="video/mp4">
-</video>
-
-<br>
-
-<!-- Reaction Camera -->
-<video id="reactionCam" autoplay muted playsinline width="180"></video>
-
-<br><br>
-<button id="backBtn" onclick="backMenuFromVideo()" disabled>
-Back to Menu (20)
-</button>
-
-</div>
-
-<div id="popup" style="
 display:none;
 position:fixed;
 top:0;
@@ -338,32 +100,46 @@ height:100%;
 background:rgba(0,0,0,0.6);
 justify-content:center;
 align-items:center;
-">
+}
 
-<div style="
+#popup div{
 background:white;
 padding:30px;
 border-radius:10px;
 text-align:center;
 width:350px;
-">
+color:black;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>🧩 HELLO MAAM JAY</h1>
+<h3>Select an Image</h3>
+
+<div id="menu"></div>
+
+<div id="game">
+<div id="puzzle"></div>
+
+<button onclick="shuffle()">Shuffle</button>
+<button onclick="backMenu()">Change Image</button>
+</div>
+
+<h3>PLEASE SOLVE THE IMAGE TO UNLOCK SECRET MODE</h3>
+
+<div id="popup">
+<div>
 
 <h2>🎉 Well Done!</h2>
-<p style="color: red;"><b>Before proceeding please turn on your audio.</b></p>
+<p style="color:red;"><b>Before proceeding please turn on your audio.</b></p>
 
 <button onclick="proceedToVideo()">Proceed</button>
 
 </div>
 </div>
-
-<script type="module">
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
-
-  const supabaseUrl = 'https://oevbtctiomjzcgjclmix.supabase.co' // replace with your project URL
-  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ldmJ0Y3Rpb21qemNnamNsbWl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MjUxNTgsImV4cCI6MjA4OTEwMTE1OH0.FxQlajCGClNlDJTNz2rK-cJ5d4eDydwXg7ujajOcwsw' // replace with anon key
-  const supabase = createClient(supabaseUrl, supabaseKey)
-</script>
-
 
 <script>
 
@@ -373,14 +149,9 @@ const game = document.getElementById("game");
 
 let currentImage = "";
 let tiles = [];
+let isShuffling = false;
 
-let positions = [
-0,1,2,
-3,4,5,
-6,7,null
-];
-
-/* CREATE IMAGE SELECTION */
+let positions = [0,1,2,3,4,5,6,7,null];
 
 const puzzles = [
 {img:"images/img1.jpg", video:"videos/vid1.mp4"},
@@ -395,315 +166,166 @@ const puzzles = [
 
 puzzles.forEach((item)=>{
 
-    const img = document.createElement("div");
-    img.className="choice";
-    img.style.backgroundImage=`url(${item.img})`;
+const img = document.createElement("div");
+img.className="choice";
+img.style.backgroundImage=`url(${item.img})`;
 
-    img.onclick=()=>startGame(item);
+img.onclick=()=>startGame(item);
 
-    menu.appendChild(img);
+menu.appendChild(img);
 
 });
-
-/* START GAME */
 
 let currentPuzzle = null;
 
 function startGame(puzzleData){
 
-    currentPuzzle = puzzleData;
-    currentImage = puzzleData.img;
+currentPuzzle = puzzleData;
+currentImage = puzzleData.img;
 
-    menu.style.display="none";
-    game.style.display="block";
+menu.style.display="none";
+game.style.display="block";
 
-    puzzle.innerHTML="";
-    tiles=[];
+puzzle.innerHTML="";
+tiles=[];
 
-    positions=[0,1,2,3,4,5,6,7,null];
+positions=[0,1,2,3,4,5,6,7,null];
 
-    createTiles();
-    render();
-    shuffle();
-}
-
-function startBackCountdown(){
-
-let seconds = 20;
-const btn = document.getElementById("backBtn");
-
-btn.disabled = true;
-btn.textContent = `Back to Menu (${seconds})`;
-
-const timer = setInterval(()=>{
-
-seconds--;
-
-btn.textContent = `Back to Menu (${seconds})`;
-
-if(seconds <= 0){
-
-clearInterval(timer);
-
-btn.disabled = false;
-btn.textContent = "Back to Menu";
+createTiles();
+render();
+shuffle();
 
 }
-
-},1000);
-
-}
-
-/* CREATE TILES */
 
 function createTiles(){
 
-    for(let i=0;i<8;i++){
+for(let i=0;i<8;i++){
 
-        const tile=document.createElement("div");
+const tile=document.createElement("div");
 
-        tile.className="tile";
-        tile.dataset.index=i;
+tile.className="tile";
+tile.dataset.index=i;
 
-        tile.style.backgroundImage=`url(${currentImage})`;
+tile.style.backgroundImage=`url(${currentImage})`;
 
-        let size = 320/3;
+let size = 320/3;
 
-        let x = (i % 3) * size;
-        let y = Math.floor(i / 3) * size;
+let x = (i % 3) * size;
+let y = Math.floor(i / 3) * size;
 
-        tile.style.backgroundPosition = `-${x}px -${y}px`;
+tile.style.backgroundPosition = `-${x}px -${y}px`;
 
-        tile.onclick=()=>move(i);
+tile.onclick=()=>move(i);
 
-        puzzle.appendChild(tile);
-        tiles.push(tile);
-    }
+puzzle.appendChild(tile);
+tiles.push(tile);
 
 }
 
-/* RENDER */
+}
 
 function render(){
 
-    tiles.forEach((tile,i)=>{
+tiles.forEach((tile,i)=>{
 
-        const pos=positions.indexOf(i);
+const pos=positions.indexOf(i);
 
-        let size = 320/3;
+let size = 320/3;
 
-        let x = (pos % 3) * size;
-        let y = Math.floor(pos / 3) * size;   
+let x = (pos % 3) * size;
+let y = Math.floor(pos / 3) * size;
 
-        tile.style.left=x+"px";
-        tile.style.top=y+"px";
+tile.style.left=x+"px";
+tile.style.top=y+"px";
 
-    });
+});
 
 }
-
-/* MOVE TILE */
 
 function move(tileIndex){
 
-    const tilePos=positions.indexOf(tileIndex);
-    const emptyPos=positions.indexOf(null);
+const tilePos=positions.indexOf(tileIndex);
+const emptyPos=positions.indexOf(null);
 
-    const valid=[
-        tilePos-1,
-        tilePos+1,
-        tilePos-3,
-        tilePos+3
-    ];
+const valid=[tilePos-1,tilePos+1,tilePos-3,tilePos+3];
 
-    if(valid.includes(emptyPos)){
+if(valid.includes(emptyPos)){
 
-        positions[emptyPos]=tileIndex;
-        positions[tilePos]=null;
+positions[emptyPos]=tileIndex;
+positions[tilePos]=null;
 
-        render();
-        checkWin(); 
-    }
+render();
+checkWin();
 
 }
 
-// function proceedToVideo(){
-
-// const video=document.getElementById("rewardVideo");
-// const source=document.getElementById("videoSource");
-
-// source.src=currentPuzzle.video;
-
-// video.load();
-
-// document.getElementById("popup").style.display="none";
-// game.style.display="none";
-// document.getElementById("videoScreen").style.display="block";
-
-// video.muted=false;
-// video.volume=1;
-
-// video.play();
-
-// startBackCountdown(); // start 20 sec lock
-
-// }
-
-function backMenuFromVideo(){
-
-document.getElementById("videoScreen").style.display="none";
-menu.style.display="grid";
-
-if(cameraStream){
-
-cameraStream.getTracks().forEach(track=>track.stop());
-
 }
-
-}   
-
-/* SHUFFLE */
 
 function shuffle(){
 
-    for(let i=0;i<200;i++){
+isShuffling = true;
 
-        const empty=positions.indexOf(null);
+for(let i=0;i<200;i++){
 
-        const neighbors=[
-            empty-1,
-            empty+1,
-            empty-3,
-            empty+3
-        ];
+const empty=positions.indexOf(null);
 
-        const movable=[];
+const neighbors=[
+empty-1,
+empty+1,
+empty-3,
+empty+3
+];
 
-        neighbors.forEach(n=>{
-            if(n>=0 && n<9 && positions[n]!==undefined){
-                movable.push(positions[n]);
-            }
-        });
+const movable=[];
 
-        const rand=movable[Math.floor(Math.random()*movable.length)];
+neighbors.forEach(n=>{
+if(n>=0 && n<9 && positions[n]!==undefined){
+movable.push(positions[n]);
+}
+});
 
-        move(rand);
-    }
+const rand=movable[Math.floor(Math.random()*movable.length)];
+
+move(rand);
 
 }
 
-/* BACK TO MENU */
+isShuffling = false;
+
+}
+
 
 function backMenu(){
 
-    game.style.display="none";
-    menu.style.display="grid";
+game.style.display="none";
+menu.style.display="grid";
 
 }
 
 function checkWin(){
 
+if(isShuffling) return;
+
 const solved=[0,1,2,3,4,5,6,7,null];
 
 if(JSON.stringify(positions)===JSON.stringify(solved)){
 
-    document.getElementById("popup").style.display="flex";
+document.getElementById("popup").style.display="flex";
 
 }
 
 }
 
-
-let cameraStream = null;
-let mediaRecorder = null;
-let recordedChunks = [];
-
-async function proceedToVideo(){
-
-const video=document.getElementById("rewardVideo");
-const source=document.getElementById("videoSource");
-
-source.src=currentPuzzle.video;
-
-video.load();
+function proceedToVideo(){
 
 document.getElementById("popup").style.display="none";
-game.style.display="none";
-document.getElementById("videoScreen").style.display="block";
 
-video.muted=false;
-video.volume=1;
-
-/* START CAMERA + RECORDING */
-
-try{
-
-cameraStream = await navigator.mediaDevices.getUserMedia({
-video:true,
-audio:true
-});
-
-const cam=document.getElementById("reactionCam");
-cam.srcObject=cameraStream;
-
-/* RECORD */
-
-mediaRecorder = new MediaRecorder(cameraStream);
-
-recordedChunks=[];
-
-mediaRecorder.ondataavailable = function(e){
-if(e.data.size>0){
-recordedChunks.push(e.data);
-}
-};
-
-mediaRecorder.onstop = async function() {
-  const blob = new Blob(recordedChunks, { type: 'video/webm' });
-
-  // Unique file name
-  const uniqueFileName = `reaction_${Date.now()}.webm`;
-
-  // Upload to Supabase
-  const { data, error } = await supabase.storage
-    .from('secretM')
-    .upload(uniqueFileName, blob, { cacheControl: '3600', upsert: true });
-
-  if (error) {
-    console.error('Upload failed:', error);
-  } else {
-    console.log('Video uploaded successfully:', uniqueFileName);
-  }
-};
-
-mediaRecorder.start();
-
-}catch(err){
-
-console.log("Camera permission denied");
+/* redirect to video page */
+window.location.href="video.html?video="+encodeURIComponent(currentPuzzle.video);
 
 }
-
-video.play();
-
-startBackCountdown();
-
-/* STOP RECORDING WHEN VIDEO ENDS */
-
-video.onended=function(){
-
-if(mediaRecorder){
-mediaRecorder.stop();
-}
-
-};
-
-}
-
 
 </script>
-
-
 
 </body>
 </html>

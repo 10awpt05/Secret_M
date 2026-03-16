@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Secret Video</title>
+
+<style>
+
+body{
+margin:0;
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#1f2937,#111827,#020617);
+color:white;
+font-family:"Segoe UI", Arial;
+text-align:center;
+}
+
+video{
+width:90vw;
+max-width:1000px;
+max-height:70vh;
+border-radius:12px;
+box-shadow:0 10px 40px rgba(0,0,0,0.8);
+}
+
+button{
+margin-top:25px;
+padding:12px 24px;
+font-size:16px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+color:white;
+background:linear-gradient(45deg,#22c55e,#16a34a);
+}
+
+</style>
+</head>
+
+<body>
+
+<h2>🎉 Well Done!</h2>
+
+<video id="rewardVideo" controls autoplay></video>
+
+<button onclick="goBack()">Back to Puzzle</button>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+const videoFile = params.get("video");
+
+const video = document.getElementById("rewardVideo");
+
+if(videoFile){
+video.src = videoFile;
+}
+
+function goBack(){
+window.location.href="index.html";
+}
+
+</script>
+
+</body>
+</html>
